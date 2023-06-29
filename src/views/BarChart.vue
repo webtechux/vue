@@ -86,7 +86,7 @@ export default {
             display: false,
           }
         }
-      } ,
+      },
       chartData: {
         labels: [],
         datasets: []
@@ -136,54 +136,58 @@ export default {
 
         const chartold = ChartJS.getChart('line-chart');
         chartold.destroy();
+        let imgPath = ['1.png', '2.png', '3.png', '4.png'];
 
-        const imgblue = new Image();
-        imgblue.src = require('@/assets/1.png');
+        const promiseArray = [];
+        for (let i = 0; i < imgPath.length; i++) {
 
-        imgblue.onload = () => {
-          const fillPatternimgblue = ctx.createPattern(imgblue, 'repeat');
-          this.foreCastChartData.datasets[0].backgroundColor = fillPatternimgblue;
-        }
+          const img = new Image();
+          img.src = imgPath[i];
 
-        const imgRed = new Image();
-        imgRed.src = require('@/assets/2.png');
+          promiseArray.push(new Promise(resolve => {
+            img.onload = () => {
+              const fillPatternimg = ctx.createPattern(img, 'repeat');
+              this.foreCastChartData.datasets[i].backgroundColor = fillPatternimg;
+              resolve();
+            }
 
-        imgRed.onload = () => {
-          const fillPatternimgRed = ctx.createPattern(imgRed, 'repeat');
-          this.foreCastChartData.datasets[1].backgroundColor = fillPatternimgRed;
-        }
-
-
-        const imgyellow = new Image();
-        imgyellow.src = require('@/assets/3.png');
-
-        imgyellow.onload = () => {
-          const fillPatternimgyellow = ctx.createPattern(imgyellow, 'repeat');
-          this.foreCastChartData.datasets[2].backgroundColor = fillPatternimgyellow;
-        }
-
-        const imgpink = new Image();
-        imgpink.src =  require('@/assets/4.png');
-
-        imgpink.onload = () => {
-          const fillPatternimgPink = ctx.createPattern(imgpink, 'repeat');
-          this.foreCastChartData.datasets[3].backgroundColor = fillPatternimgPink;
+          }));
+          await Promise.all(promiseArray);
         }
 
 
-        
+        // const imgyellow = new Image();
+        // imgyellow.src = require('@/assets/3.png');
+        // const imageLoadPromise3 = new Promise(resolve => {
+        //   imgyellow.onload = () => {
+        //     const fillPatternimgyellow = ctx.createPattern(imgyellow, 'repeat');
+        //     this.foreCastChartData.datasets[2].backgroundColor = fillPatternimgyellow;
+        //     resolve();
+        //   }
+        // });
+        // await imageLoadPromise3;
+
+        // const imgpink = new Image();
+        // imgpink.src = require('@/assets/4.png');
+        // const imageLoadPromise4 = new Promise(resolve => {
+        //   imgpink.onload = () => {
+        //     const fillPatternimgPink = ctx.createPattern(imgpink, 'repeat');
+        //     this.foreCastChartData.datasets[3].backgroundColor = fillPatternimgPink;
+        //     resolve();
+        //   }
+        // });
+        // await imageLoadPromise4;
 
 
 
 
+        this.newChart = new ChartJS(ctx,
+          {
+            type: 'bar',
+            data: this.foreCastChartData,
+            options: this.chartFinalOptions
 
-
-        this.newChart = new ChartJS(ctx, {
-          type: 'bar',
-          data: this.foreCastChartData,
-          options:this.chartFinalOptions
-
-        });
+          });
 
         this.newChart.update();
 
